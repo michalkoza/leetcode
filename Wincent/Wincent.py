@@ -6,7 +6,6 @@ from typing import Tuple, Optional
 class Solver:
     directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 
-
     def __init__(self):
         self.verticals = defaultdict(list)
         self.horizontals = defaultdict(list)
@@ -23,7 +22,8 @@ class Solver:
 
     def check_direction(self, direction, x, y) -> Optional[Tuple[int, int]]:
         if direction == "N":
-            new_y = self.get_next_player(y, self.verticals[x], 0) # step is 0 because current player is already gone and bisect will return index of the next
+            new_y = self.get_next_player(y, self.verticals[x],
+                                         0)  # step is 0 because current player is already gone and bisect will return index of the next
             if new_y is not None:
                 return x, new_y
         elif direction == "NE":
@@ -57,7 +57,8 @@ class Solver:
         return None
 
     def look_around(self, x, y, receive_direction) -> Optional[Tuple[int, int, str]]:
-        for throw_direction in [self.directions[(self.directions.index(receive_direction) + 1 + i) % 8] for i in range(8)]:
+        for throw_direction in [self.directions[(self.directions.index(receive_direction) + 1 + i) % 8] for i in
+                                range(8)]:
             if (find := self.check_direction(throw_direction, x, y)) is not None:
                 new_x, new_y = find
                 new_receive_direction = self.directions[(self.directions.index(throw_direction) + 4) % 8]
@@ -74,38 +75,49 @@ class Solver:
         index = bisect.bisect_left(self.backslashes[x + y], x)
         self.backslashes[x + y].pop(index)
 
-    def solve_test_case(self, N, player_coordinates, initial_direction, starting_player_number) -> list[int]:
+    def solve_test_case(self, test_case, N, player_coordinates, initial_direction, starting_player_number) -> list[int]:
         for x, y in player_coordinates:
             bisect.insort(self.horizontals[y], x)
             bisect.insort(self.verticals[x], y)
             bisect.insort(self.slashes[y - x], x)
             bisect.insort(self.backslashes[x + y], x)
 
+        with open(f"plot_points_{test_case}.out", "w+", encoding="utf-8") as plot_points_file:
+            for x, y in player_coordinates:
+                plot_points_file.write(f"{x},{y}\n")
+
         x, y = player_coordinates[starting_player_number - 1]
+
+
         self.remove_player(x, y)
 
         remaining_players = N - 1
         throws = 0
         direction = initial_direction
 
-        while remaining_players > 0:
-            if (find := self.look_around(x, y, direction)) is None:  # noone to throw to
-                break
-            else:
-                x, y, direction = find
-                throws += 1
-                remaining_players -= 1
-                self.remove_player(x, y)
 
-        last_player_number = player_coordinates.index([x, y]) + 1
-        return [throws, last_player_number]
+
+        with open(f"plot_{test_case}.out", "w+", encoding="utf-8") as plot_file:
+            while remaining_players > 0:
+                if (find := self.look_around(x, y, direction)) is None:  # noone to throw to
+                    break
+                else:
+                    new_x, new_y, direction = find
+                    throws += 1
+                    remaining_players -= 1
+                    self.remove_player(new_x, new_y)
+                    plot_file.write(f"{x},{y},{new_x},{new_y}\n")
+                    x, y = new_x, new_y
+            last_player_number = player_coordinates.index([x, y]) + 1
+
+            return [throws, last_player_number]
 
 
 def main():
-    with open("example.in", "r", encoding="utf-8") as in_file:
+    with open("real_input.in", "r", encoding="utf-8") as in_file:
         test_cases = int(in_file.readline().strip())
         with open("example.out", "w+", encoding="utf-8") as out_file:
-            for _ in range(test_cases):
+            for test_case in range(test_cases):
                 N = int(in_file.readline())
                 player_coordinates = []
                 for _ in range(N):
@@ -113,7 +125,8 @@ def main():
                 initial_direction = in_file.readline().strip()
                 starting_player_idx = int(in_file.readline())
 
-                result = Solver().solve_test_case(N, player_coordinates, initial_direction, starting_player_idx)
+                result = Solver().solve_test_case(test_case, N, player_coordinates, initial_direction,
+                                                  starting_player_idx)
 
                 out_file.write(f"{" ".join(map(str, result))}\n")
 
