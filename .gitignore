@@ -1,0 +1,138 @@
+# Byte-compiled / optimized / compiled Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+.env/
+.venv/
+venv/
+ENV/
+env/
+build/
+develop-eggs/
+.eggs/
+lib/
+lib64/
+parts/
+dist/
+eggs/
+.installed.cfg
+*.egg
+*.egg-info/
+*.dist-info/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+*.cover
+*.py,cover
+.cache
+nosetests.xml
+coverage.xml
+*.mocha.json
+pytest_cache/
+junitxml/
+test-results/
+
+# Pyre type checker
+.pyre/
+
+# MyPy type checker
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# pyright type checker
+pyrightconfig.json
+
+# Pytest cache
+.pytest_cache/
+
+# MacOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# macOS's Finder
+.Spotlight-V100
+.Trashes
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+*.bak
+*.orig
+*.log
+
+# Editor directories and settings
+.idea/
+.vscode/
+*.code-workspace
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite3
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Flask / Django
+instance/
+.webassets-cache
+*.log
+*.pot
+*.pyc
+
+# Static files
+staticfiles/
+media/
+
+# Local configuration files
+.env.local
+.env.production
+.env.*.local
+
+# Celery
+celerybeat-schedule
+*.pid
+
+# SageMath
+*.sage.py
+
+# PyCharm
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python IDEs
+.pydevproject
+.project
+.metadata
+# For Pycharm:
+.pycaches/
+*.pydevconsole*
