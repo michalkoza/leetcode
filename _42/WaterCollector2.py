@@ -4,16 +4,21 @@ from typing import List
 class Solution:
     def trap(self, height: List[int]) -> int:
         n = len(height)
-        possible_levels = [0] * n
+        left = 0
+        right = n - 1
+        water = 0
 
-        highest = 0
-        for i in range(n):
-            highest = max(highest, height[i])
-            possible_levels[i] = highest
+        highest_left = height[left]
+        highest_right = height[right]
 
-        highest = 0
-        for i in range(n - 1, -1, -1):
-            highest = max(highest, height[i])
-            possible_levels[i] = min(possible_levels[i], highest) - height[i]
+        while left < right:
+            if highest_left < highest_right:
+                left += 1
+                highest_left = max(highest_left, height[left])
+                water += max(0, min(highest_left, highest_right) - height[left])
+            else:
+                right -= 1
+                highest_right = max(highest_right, height[right])
+                water += max(0, min(highest_left, highest_right) - height[right])
 
-        return sum(possible_levels)
+        return water
