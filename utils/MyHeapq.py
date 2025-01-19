@@ -21,3 +21,6 @@ class MyHeapq:
             return None
         val = heapq.heappop(self._data)
         return val[2]
+
+    def size(self):
+        return len(self._data)
