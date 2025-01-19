@@ -2,41 +2,46 @@ from typing import List
 
 
 class Solution:
-
-    @classmethod
-    def iter_box(cls, row, col, i):
-        return 3 * (row // 3) + i // 3, 3 * (col // 3) + i % 3
-
     def solveSudoku(self, board: List[List[str]]) -> None:
         n = 9
+        used_in_rows = [set() for _ in range(n)]
+        used_in_cols = [set() for _ in range(n)]
+        used_in_boxes = [[set() for _ in range(n // 3)] for _ in range(n // 3)]
+        unsolved = set()
 
-        def is_valid(row, col, ch) -> bool:
-            for i in range(n):
-                if board[row][i] == ch:
-                    return False
-                if board[i][col] == ch:
-                    return False
-                box_x, box_y = self.iter_box(row, col, i)
-                if board[box_x][box_y] == ch:
-                    return False
-            return True
+        def get_possibilities(row, col):
+            invalid = used_in_rows[row] | used_in_cols[col] | used_in_boxes[row // 3][col // 3]
+            valid = {x for x in range(1, n + 1) if x not in invalid}
+            return valid
 
-        def solve(row, col):
-            if row == n:
+        for row in range(n):
+            for col in range(n):
+                if (ch := board[row][col]) == ".":
+                    unsolved.add((row, col))
+                else:
+                    used_in_rows[row].add(int(ch))
+                    used_in_cols[col].add(int(ch))
+                    used_in_boxes[row // 3][col // 3].add(int(ch))
+
+        def solve():
+            if len(unsolved) == 0:
                 return True
-            if col == n:
-                return solve(row + 1, 0)
-
-            if board[row][col] == ".":
-                for i in range(1, 10):
-                    if is_valid(row, col, str(i)):
-                        board[row][col] = str(i)
-                        if solve(row, col + 1):
-                            return True
-                        else:
-                            board[row][col] = "."
-                return False
             else:
-                return solve(row, col + 1)
+                cell = min(unsolved, key=lambda cell: len(get_possibilities(cell[0], cell[1])))
+                row, col = cell
+                for value in get_possibilities(row, col):
+                    used_in_rows[row].add(value)
+                    used_in_cols[col].add(value)
+                    used_in_boxes[row // 3][col // 3].add(value)
+                    unsolved.remove(cell)
+                    if solve():
+                        board[row][col] = str(value)
+                        return True
+                    else:
+                        used_in_rows[row].remove(value)
+                        used_in_cols[col].remove(value)
+                        used_in_boxes[row // 3][col // 3].remove(value)
+                        unsolved.add(cell)
+                return False
 
-        solve(0, 0)
+        solve()
