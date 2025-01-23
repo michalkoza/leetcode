@@ -3,10 +3,9 @@ import pytest
 from _76_MinWindow.MinWindow import Solution
 
 test_cases = [
-
+    ("aa", "aa", "aa"),
     ("a", "a", "a"),
     ("ADOBECODEBANC", "ABC", "BANC"),
-
     ("a", "aa", ""),
 ]
 
