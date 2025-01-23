@@ -1,6 +1,6 @@
 import pytest
 
-from _828.SubstringCharCounter import Solution
+from _828_CountUniqueCharsOfSubstring.SubstringCharCounter import Solution
 
 test_cases = [
     ("ABC", 10),
