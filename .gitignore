@@ -1,3 +1,4 @@
+.idea
 # Byte-compiled / optimized / compiled Python files
 __pycache__/
 *.py[cod]
