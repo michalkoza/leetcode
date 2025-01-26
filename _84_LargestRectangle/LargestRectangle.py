@@ -12,17 +12,20 @@ class Solution:
         for idx in range(len(heights)):
             height = heights[idx]
             i = bisect.bisect_left(relevant_heights, height)
-            if i >= len(relevant_heights):
+            if i >= len(relevant_heights) or relevant_heights[i] != height:
                 bisect.insort(relevant_heights, height)
-            elif relevant_heights[i] != height:
-                rectangles_tracker[height] = rectangles_tracker[relevant_heights[i]]
-                bisect.insort(relevant_heights, height)
-            for h in relevant_heights[:i + 1]:
-                    rectangles_tracker[h] += 1
-                    biggest_so_far = max(biggest_so_far, h * rectangles_tracker[h])
-            for h in relevant_heights[i + 1:]:
-                rectangles_tracker[h] = 0
+            rectangles_tracker[relevant_heights[i]] += 1
+            for j in range(len(relevant_heights) - 1, i, -1):
+                collected = rectangles_tracker[relevant_heights[j]]
+                biggest_so_far = max(biggest_so_far, collected * relevant_heights[j])
+                rectangles_tracker[relevant_heights[j]] = 0
+                rectangles_tracker[relevant_heights[j - 1]] += collected
             relevant_heights = relevant_heights[:i + 1]
-            relevant_heights = [h for h in relevant_heights if (rectangles_tracker[h] + n - idx) * h > biggest_so_far]
+
+        for j in range(len(relevant_heights) - 1, -1, -1):
+            collected = rectangles_tracker[relevant_heights[j]]
+            biggest_so_far = max(biggest_so_far, collected * relevant_heights[j])
+            if j > 0:
+                rectangles_tracker[relevant_heights[j - 1]] += collected
 
         return biggest_so_far
